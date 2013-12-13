@@ -38,7 +38,7 @@
         textNode = fetchWordNode(randomWord);
 
         // make sure the textNode is within the scope of our selector
-        if(textNode && $el.find($(textNode.parentElement))) {
+        if(textNode && $el.find($(textNode.parentElement)).length) {
           selectedWords.push({ node: textNode, word: randomWord });
           validNodes++;
         }
