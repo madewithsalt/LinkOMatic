@@ -6,7 +6,7 @@
         // how many words to wrap
         totalWords: 10,
 
-        // how big of a word does it need to be to qualify
+        // how big of a word does it need to be to qualify?
         minLength: 4,
 
         // use common text elements to search for readable content
@@ -42,7 +42,7 @@
           selectedWords.push({ node: textNode, word: randomWord });
           validNodes++;
         }
-        
+
       }
 
       for(i; i < selectedWords.length; i++) {
