@@ -10,30 +10,32 @@
         minLength: 4,
 
         // use common text elements to search for readable content
-        nodes: 'p, h1, h2, h3, h4, h5, h6'
+        elements: 'p, h1, h2, h3, h4, h5, h6'
       };
 
   function Container(el, options) {
     var i = 0, 
         $el = el,
         validNodes = 0, 
-        textNode, randomWord,
         opts = $.extend({}, defaults, options),
+        totalWords = opts.totalWords,
+        minLength = opts.minLength,
+        wordList = getWordIndex(opts.elements, minLength),
         selectedWords = [],
-        wordList = getWordIndex();
+        textNode, randomWord;
 
     // are there any words here?
     if(wordList) {
 
       // if there's aren't enough words, adjust accordingly
       // by resetting the totalWords value.
-      if(wordList.length < opts.totalWords) {
-        opts.totalWords = wordList.length;
+      if(wordList.length < totalWords) {
+        totalWords = wordList.length;
       }
 
       // concern: potential for infinite loop here. 
       // should be futher insulated so that it doesn't jam up the page.
-      while(validNodes < opts.totalWords) {
+      while(validNodes < totalWords) {
         randomWord = findRandomWord(wordList);
         textNode = fetchWordNode(randomWord);
 
@@ -58,10 +60,10 @@
      * that are greater than the minLength setting
      * @return {array} Word List
     */
-    function getWordIndex() {
-      var reg = new RegExp('\\b([a-z]{' + opts.minLength + ',})\\b', 'gi');
+    function getWordIndex(elList) {
+      var reg = new RegExp('\\b([a-z]{' + minLength + ',})\\b', 'gi');
 
-      return $(opts.nodes).text().match(reg);
+      return $(elList).text().match(reg);
     };
 
     /**
@@ -71,7 +73,7 @@
     function fetchWordNode(word) {
       var firstNode, xPathResult;
 
-      if(word && word.length >= opts.minLength) {
+      if(word && word.length >= minLength) {
 
         xPathResult = document.evaluate('//text()[contains(., \"' + word + '\")]',
           document.body, null, XPathResult.ANY_TYPE, null);
@@ -87,7 +89,7 @@
     /**
      * recursively calls itself until it returns a value 
      * that meets all of our criteria in the settings/defaults
-     * @return {node} Qualified Node or undefined
+     * @return {node} Qualified Node
     */
     function getQualifiedNode(node, xPathResult) {
       var isQualified = qualifyNode(node, $el), 
@@ -137,6 +139,7 @@
 
     /** 
      * Our word randomizin' finder 
+     * @return {string} Random Word from List
      */
     function findRandomWord(wordList) {
       var randomNum = (function() {
