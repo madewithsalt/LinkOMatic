@@ -134,7 +134,7 @@
           $el = $(node.parentElement),
           text = $el.text();
 
-      $(node.parentElement).html(text.replace(word, link));
+      $el.html(text.replace(word, link));
     };
 
     /** 
